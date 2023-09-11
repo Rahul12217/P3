@@ -43,11 +43,18 @@ namespace P3.Controllers
             var ticket = new TicketDetails()
             {
                 UserId = addTicket.UserId,
+                PassengerName=addTicket.PassengerName,
+                Age= addTicket.Age,
+                Gender=addTicket.Gender,
                 From = addTicket.From,
                 To = addTicket.To,
-                DepartureDate = addTicket.DepartureDate,
+                DepartureDate = addTicket.DepartureDate.Date,
+                DepartureTime=addTicket.DepartureTime,
+                ArrivalTime = addTicket.ArrivalTime,
                 No_of_Passengers = addTicket.No_of_Passengers,
-                Class = addTicket.Class,
+                //Class = addTicket.Class,
+                Fare=addTicket.Fare,
+                Flight_number=addTicket.Flight_number,
             };
             await context.TicketsTable.AddAsync(ticket);
             await context.SaveChangesAsync();
@@ -77,9 +84,25 @@ namespace P3.Controllers
 
             if (ticket.Count != 0)
             {
-                return Ok(ticket[0]);
+                return Ok(ticket);
             }
             return NotFound();
         }
+
+        [HttpGet]
+        [Route("{TicketId}")]
+        public async Task<IActionResult> GetTicketByUSerId(Guid TicketId)
+        {
+            var ticket = await context.TicketsTable.FindAsync(TicketId);
+
+            if (ticket != null)
+            {
+                return Ok(ticket);
+            }
+            return NotFound();
+        }
+
+
+
     }
 }

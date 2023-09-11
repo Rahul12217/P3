@@ -10,7 +10,7 @@ namespace P3.Models
         public string Flight_number { get; set; }
 
         [Required]
-        public string Airline { get;set; }
+        public string Airline { get; set; }
 
         [Required]
         public string From { get;set; }
@@ -20,6 +20,13 @@ namespace P3.Models
 
         [Required]
         public DateTime DepartureDate { get; set; }
+
+        [Required]
+        public string DepartureTime { get; set; }
+
+        [Required]
+        public string ArrivalTime { get; set; }
+
 
         [Required]
         public string Fare { get; set; }

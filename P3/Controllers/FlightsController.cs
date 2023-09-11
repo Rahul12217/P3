@@ -53,8 +53,10 @@ namespace P3.Controllers
                 Airline = addUser.Airline,
                 From = addUser.From,
                 To = addUser.To,
-                DepartureDate= addUser.DepartureDate,
-                Fare=addUser.Fare
+                DepartureDate = addUser.DepartureDate.Date,
+                DepartureTime=addUser.DepartureTime,
+                ArrivalTime=addUser.ArrivalTime,
+                Fare = addUser.Fare
             };
             await context.FlightTable.AddAsync(user);
             await context.SaveChangesAsync();
@@ -71,7 +73,7 @@ namespace P3.Controllers
                 a.Airline = flight.Airline;
                 a.From = flight.From;
                 a.To = flight.To;
-                a.DepartureDate = flight.DepartureDate;
+                a.DepartureDate = flight.DepartureDate.Date;
                 a.Fare = flight.Fare;
                 await context.SaveChangesAsync();
                 return Ok(a);
@@ -79,21 +81,59 @@ namespace P3.Controllers
             return NotFound();
         }
 
+
+        [HttpGet]
+        [Route("{flight_number}")]
+        public async Task<IActionResult> GetFlightbyNumber(string flight_number)
+        {
+            var ticket = await context.FlightTable.FindAsync(flight_number);
+
+            if (ticket != null)
+            {
+                return Ok(ticket);
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Route("{from}/{to}")]
+        //[Route("{from}")]
+        public async Task<IActionResult> GetFlightBylocation(string from, string to)
+        {
+            var source = await context.FlightTable.Where(x => x.From == from).ToListAsync();
+            if (source.Count != 0)
+            {
+                return Ok(source);
+            }
+
+            //if (source.Count != 0)
+            //{
+            //    var flight = await context.FlightTable.Where(x => x.To == to).ToListAsync();
+            //    if (flight.Count != 0)
+            //    {
+            //        return Ok(flight);
+            //    }
+            //}
+            return NotFound();
+        }
+
+
+
         //[HttpDelete("{id}")]
         //public async Task<IActionResult> CancelFLight(string id)
         //{
-    //        if (context.FlightTable == null)
-    //        {
-    //            return NoContent();
-    //          }
+        //        if (context.FlightTable == null)
+        //        {
+        //            return NoContent();
+        //          }
         //    var flight = await context.FlightTable.FindAsync(id);
-    //    if (flight != null)
-    //    {
-    //        context.FlightTable.Remove(flight);
-    //        await context.SaveChangesAsync();
-    //    }
-    //    return NotFound();
-    //}
+        //    if (flight != null)
+        //    {
+        //        context.FlightTable.Remove(flight);
+        //        await context.SaveChangesAsync();
+        //    }
+        //    return NotFound();
+        //}
 
-}
+    }
 }

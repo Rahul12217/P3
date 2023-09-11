@@ -93,7 +93,7 @@ namespace P2.Controllers
             {
                 return Ok(user[0]);
             }
-            return NotFound("User is invalid");
+            return NotFound();
 
 
         }
