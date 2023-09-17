@@ -96,12 +96,12 @@ namespace P3.Controllers
         }
 
         [HttpGet]
-        [Route("{from}/{to}")]
+        [Route("{from}/{to}/{date}")]
         //[Route("{from}")]
-        public async Task<IActionResult> GetFlightBylocation(string from, string to)
+        public async Task<IActionResult> GetFlightBylocation(string from, string to,DateTime date)
         {
-            var source = await context.FlightTable.Where(x => x.From == from).ToListAsync();
-            if (source.Count != 0)
+            var source = await context.FlightTable.Where(x => x.From.ToLower() == from.ToLower() && x.To.ToLower() == to.ToLower() && x.DepartureDate == date).ToListAsync();
+            if (source.Count != 0 )
             {
                 return Ok(source);
             }

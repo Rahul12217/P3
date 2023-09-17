@@ -10,6 +10,10 @@ namespace P3.Models
         [Required]
         public string PassengerName { get; set; }
 
+        [Required]
+        public string PassengerEmail { get; set;}
+
+        [Required] public string PassengerPhone { get;set; }
         [Required] public int Age { get; set; }
 
         [Required] public string Gender { get; set; }
