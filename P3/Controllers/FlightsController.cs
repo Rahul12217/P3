@@ -117,6 +117,27 @@ namespace P3.Controllers
             return NotFound();
         }
 
+        //[HttpGet]
+        //[Route("{to}")]
+        //public async Task<IActionResult> GetFlightByTo(string from, string to, DateTime date)
+        //{
+        //    var source = await context.FlightTable.Where(x =>x.To.ToLower() == to.ToLower()).ToListAsync();
+        //    if (source.Count != 0)
+        //    {
+        //        return Ok(source);
+        //    }
+
+        //    //if (source.Count != 0)
+        //    //{
+        //    //    var flight = await context.FlightTable.Where(x => x.To == to).ToListAsync();
+        //    //    if (flight.Count != 0)
+        //    //    {
+        //    //        return Ok(flight);
+        //    //    }
+        //    //}
+        //    return NotFound();
+        //}
+
 
 
         //[HttpDelete("{id}")]

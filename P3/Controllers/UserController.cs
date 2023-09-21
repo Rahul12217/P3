@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using P3.Models;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace P2.Controllers
@@ -33,6 +35,23 @@ namespace P2.Controllers
                 Password = addUser.Password,
                 Phone = addUser.Phone
             };
+
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress("aticket79@gmail.com");
+            message.Subject = $"{addUser.Name},Welcome to AirTicket.com!";
+            message.To.Add(new MailAddress(addUser.Email));
+            message.Body = $"<html><body> <h3> {addUser.Name},Welcome to Booking.com!</h3> <p>There’s a lot of world out there to explore, and your new account will help you do just that.</p></body></html>";
+            message.IsBodyHtml = true;
+
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("aticket79@gmail.com", "qiwp turh muvt bkwi"),
+                EnableSsl = true,
+            };
+
+            smtpClient.Send(message);
+
             await context.UsersTable.AddAsync(user);
             await context.SaveChangesAsync();
             return Ok(user);
