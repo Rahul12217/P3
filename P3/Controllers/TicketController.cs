@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using P3.Models;
 using System;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -59,6 +61,22 @@ namespace P3.Controllers
                 Fare=addTicket.Fare,
                 Flight_number=addTicket.Flight_number,
             };
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress("aticket79@gmail.com");
+            message.Subject = $"Your Ticket's Booked";
+            message.To.Add(new MailAddress(ticket.PassengerEmail));
+            message.Body = $"<html><body> <h3> {ticket.PassengerName},Welcome to AirTicket.com!</h3> <p>Your ticket from {ticket.From} to {ticket.To} is Booked succesfully.</p></body></html>";
+            message.IsBodyHtml = true;
+
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("aticket79@gmail.com", "qiwp turh muvt bkwi"),
+                EnableSsl = true,
+            };
+
+            smtpClient.Send(message);
+
             await context.TicketsTable.AddAsync(ticket);
             await context.SaveChangesAsync();
             return Ok(ticket);
@@ -69,6 +87,22 @@ namespace P3.Controllers
         public async Task<IActionResult> DeleteTicket(Guid id)
         {
             var ticket = await context.TicketsTable.FindAsync(id);
+
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress("aticket79@gmail.com");
+            message.Subject = $"Your Ticket's Cancelled";
+            message.To.Add(new MailAddress(ticket.PassengerEmail));
+            message.Body = $"<html><body> <h3> {ticket.PassengerName},Welcome to AirTicket.com!</h3> <p> TicketId : {ticket.TicketId}</p> <p>We regret to inform you that your ticket from {ticket.From} to {ticket.To} is cancelled.</p></body></html>";
+            message.IsBodyHtml = true;
+
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("aticket79@gmail.com", "qiwp turh muvt bkwi"),
+                EnableSsl = true,
+            };
+
+            smtpClient.Send(message);
 
             if (ticket != null)
             {
