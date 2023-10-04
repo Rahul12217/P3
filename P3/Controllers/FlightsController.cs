@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using P3.Migrations;
 
 namespace P3.Controllers
 {
@@ -87,6 +88,7 @@ namespace P3.Controllers
         public async Task<IActionResult> GetFlightbyNumber(string flight_number)
         {
             var ticket = await context.FlightTable.FindAsync(flight_number);
+            //var ticket = await context.FlightTable.Where(x => x.Flight_number==flight_number || x.To.ToLower()==flight_number.ToLower()).ToListAsync();
 
             if (ticket != null)
             {
@@ -119,22 +121,13 @@ namespace P3.Controllers
 
         //[HttpGet]
         //[Route("{to}")]
-        //public async Task<IActionResult> GetFlightByTo(string from, string to, DateTime date)
+        //public async Task<IActionResult> GetFlightByTo(string to)
         //{
-        //    var source = await context.FlightTable.Where(x =>x.To.ToLower() == to.ToLower()).ToListAsync();
+        //    var source = await context.FlightTable.Where(x => x.To.ToLower() == to.ToLower()).ToListAsync();
         //    if (source.Count != 0)
         //    {
         //        return Ok(source);
         //    }
-
-        //    //if (source.Count != 0)
-        //    //{
-        //    //    var flight = await context.FlightTable.Where(x => x.To == to).ToListAsync();
-        //    //    if (flight.Count != 0)
-        //    //    {
-        //    //        return Ok(flight);
-        //    //    }
-        //    //}
         //    return NotFound();
         //}
 
