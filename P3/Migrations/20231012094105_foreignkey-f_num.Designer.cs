@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P3.Models;
 
@@ -11,9 +12,10 @@ using P3.Models;
 namespace P3.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231012094105_foreignkey-f_num")]
+    partial class foreignkeyf_num
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,6 +90,9 @@ namespace P3.Migrations
 
                     b.Property<string>("Flight_number")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FlightsFlight_number")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("From")
@@ -122,7 +127,7 @@ namespace P3.Migrations
 
                     b.HasKey("TicketId");
 
-                    b.HasIndex("Flight_number");
+                    b.HasIndex("FlightsFlight_number");
 
                     b.HasIndex("UserId");
 
@@ -163,9 +168,7 @@ namespace P3.Migrations
                 {
                     b.HasOne("P3.Models.Flights", "Flights")
                         .WithMany()
-                        .HasForeignKey("Flight_number")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FlightsFlight_number");
 
                     b.HasOne("P3.Models.UserDetails", "UserDetail")
                         .WithMany()

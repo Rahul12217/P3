@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using P3.Models;
+using P3.Repositories;
 using System;
 using System.Linq;
 using System.Net;
@@ -18,15 +19,19 @@ namespace P2.Controllers
         Random random = new Random();
 
         private readonly MyDbContext context;
-        public UsersController(MyDbContext _context)
+        private readonly IUsersRepo userRepo;
+
+        public UsersController(MyDbContext _context, IUsersRepo _usersRepo)
         {
+            this.userRepo = _usersRepo;
             context = _context;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(await context.UsersTable.ToListAsync());
+            var users = await userRepo.GetUsers();
+            return Ok(users);
         }
 
         [HttpPost]
@@ -40,26 +45,28 @@ namespace P2.Controllers
                 Phone = addUser.Phone
             };
 
-            if(context.UsersTable.Any(x=>x.Email==user.Email)) { return NotFound(); }
+            user = await userRepo.AddUser(user);
 
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress("aticket79@gmail.com");
-            message.Subject = $"{addUser.Name},Welcome to AirTicket.com!";
-            message.To.Add(new MailAddress(addUser.Email));
-            message.Body = $"<html><body> <h3> {addUser.Name},Welcome to Booking.com!</h3> <p>There’s a lot of world out there to explore, and your new account will help you do just that.</p></body></html>";
-            message.IsBodyHtml = true;
-
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+            if(user != null)
             {
-                Port = 587,
-                Credentials = new NetworkCredential("aticket79@gmail.com", "qiwp turh muvt bkwi"),
-                EnableSsl = true,
-            };
+                MailMessage message = new MailMessage();
+                message.From = new MailAddress("aticket79@gmail.com");
+                message.Subject = $"{user.Name},Welcome to AirTicket.com!";
+                message.To.Add(new MailAddress(user.Email));
+                message.Body = $"<html><body> <h3> {user.Name},Welcome to AirTicket.com!</h3> <p>There’s a lot of world out there to explore, and your new account will help you do just that.</p></body></html>";
+                message.IsBodyHtml = true;
 
-            smtpClient.Send(message);
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("aticket79@gmail.com", "qiwp turh muvt bkwi"),
+                    EnableSsl = true,
+                };
+                smtpClient.Send(message);
+            }
 
-            await context.UsersTable.AddAsync(user);
-            await context.SaveChangesAsync();
+            if(user == null) { return NotFound(); }
+
             return Ok(user);
         }
 

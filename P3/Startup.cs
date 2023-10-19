@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using P3.Models;
+using P3.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace P3
             services.AddControllers();
             services.AddDbContext<MyDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("myconnection")));
+            services.AddScoped<IUsersRepo, UsersRepo>();
             
             services.AddSwaggerGen();
             services.AddSwaggerGen(c =>

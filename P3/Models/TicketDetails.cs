@@ -47,12 +47,13 @@ namespace P3.Models
 
 
         [Required]
+        [ForeignKey("Flights")]
         public string Flight_number { get; set; }
 
+        public Flights Flights { get; set; }
 
         [Required]
         public string Fare { get; set; }
-
 
         [Required]
         [ForeignKey("UserDetail")]
